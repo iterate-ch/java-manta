@@ -91,14 +91,15 @@
         <url>https://github.com/joyent/java-manta/issues</url>
     </issueManagement>
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>maven.cyberduck.io-release</id>
+            <url>s3://repo.maven.cyberduck.io/releases/</url>
+            <layout>default</layout>
         </repository>
+        <snapshotRepository>
+            <id>maven.cyberduck.io-snapshot</id>
+            <url>s3://repo.maven.cyberduck.io/snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <properties>
