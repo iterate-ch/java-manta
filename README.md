@@ -19,7 +19,7 @@ be installed by adding the following dependency using [Maven 3.1.x](https://mave
 
 ```
 <dependency>
-    <groupId>com.joyent.manta</groupId>
+    <groupId>ch.iterate.manta</groupId>
     <artifactId>java-manta-client</artifactId>
     <version>LATEST</version>
 </dependency>

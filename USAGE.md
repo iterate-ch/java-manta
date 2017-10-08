@@ -24,7 +24,7 @@ Add the latest java-manta-client dependency to your Maven `pom.xml`.
 
 ```xml
 <dependency>
-    <groupId>com.joyent.manta</groupId>
+    <groupId>ch.iterate.manta</groupId>
     <artifactId>java-manta-client</artifactId>
     <version>LATEST</version>
 </dependency>

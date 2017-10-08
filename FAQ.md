@@ -48,18 +48,18 @@ dependency, e.g.:
 
 ```xml
     <dependency>
-        <groupId>com.joyent.manta</groupId>
+        <groupId>ch.iterate.manta</groupId>
         <artifactId>java-manta-client-unshaded</artifactId>
         <version>x.y.z</version>
     </dependency>
 
     <dependency>
-        <groupId>com.joyent.manta</groupId>
+        <groupId>ch.iterate.manta</groupId>
         <artifactId>java-manta-client-kryo-serialization</artifactId>
         <version>x.y.z</version>
         <exclusions>
             <exclusion>
-                <groupId>com.joyent.manta</groupId>
+                <groupId>ch.iterate.manta</groupId>
                 <artifactId>java-manta-client</artifactId>
             </exclusion>
         </exclusions>
