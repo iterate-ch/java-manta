@@ -28,32 +28,31 @@ import java.security.KeyPair;
  * @since 3.0.0
  */
 public class UriSigner {
-    /**
-     * Manta configuration object.
-     */
-    private final ConfigContext config;
 
     /**
-     * HTTP signature generator instance.
+     * Authentication Helper which provides objects needed for signing.
      */
-    private final ThreadLocalSigner signer;
+    private final AuthenticationConfigurator authConfig;
 
     /**
-     * Cryptographic key pair used to sign URIs.
-     */
-    private final KeyPair keyPair;
-
-    /**
-     * Creates a new instance.
+     * DEPRECATED: Creates an instance based on a new authentication context.
      *
      * @param config Manta configuration context
      * @param keyPair cryptographic key pair used to sign URIs
      * @param signer Signer configured to work with the the given keyPair
      */
+    @Deprecated
     public UriSigner(final ConfigContext config, final KeyPair keyPair, final ThreadLocalSigner signer) {
-        this.config = config;
-        this.keyPair = keyPair;
-        this.signer = signer;
+        this(new AuthenticationConfigurator(config));
+    }
+
+    /**
+     * Creates a new instance. This constructor is package-private because this class is being made package private.
+     *
+     * @param authConfig Manta authentication context
+     */
+    UriSigner(final AuthenticationConfigurator authConfig) {
+        this.authConfig = authConfig;
     }
 
     /**
@@ -77,11 +76,14 @@ public class UriSigner {
                     "Query must be null or empty. URI: %s", uri);
         }
 
+        final ThreadLocalSigner signer = authConfig.getSigner();
+
         final String charset = "UTF-8";
         final String algorithm = signer.get().getHttpHeaderAlgorithm().toUpperCase();
-        final String keyId = String.format("/%s/keys/%s",
-                                           config.getMantaUser(),
-                                           KeyFingerprinter.md5Fingerprint(keyPair));
+        final String keyId = String.format(
+                "/%s/keys/%s",
+                authConfig.getContext().getMantaUser(),
+                KeyFingerprinter.md5Fingerprint(authConfig.getKeyPair()));
 
         final String keyIdEncoded = URLEncoder.encode(keyId, charset);
 
@@ -95,10 +97,11 @@ public class UriSigner {
 
 
         StringBuilder request = new StringBuilder();
-        final byte[] sigBytes = sigText.toString().getBytes(
-                StandardCharsets.UTF_8);
-        final byte[] signed = signer.get().sign(config.getMantaUser(),
-                                                keyPair, sigBytes);
+        final byte[] sigBytes = sigText.toString().getBytes(StandardCharsets.UTF_8);
+
+        // first parameter isn't actually used for anything, just checked for nullness
+        final byte[] signed = signer.get().sign("", authConfig.getKeyPair(), sigBytes);
+
         final String encoded = new String(Base64.encode(signed), charset);
         final String urlEncoded = URLEncoder.encode(encoded, charset);
 
